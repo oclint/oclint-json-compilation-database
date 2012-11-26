@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+import os
+import json
+
+OCLINT_BIN_FOLDER = os.path.dirname(os.path.abspath(__file__))
+OCLINT_BIN = OCLINT_BIN_FOLDER + "/oclint-0.6"
+CURRENT_WORKING_DIRECTORY = os.getcwd()
+JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + "/compile_commands.json"
+
+if os.path.isfile(OCLINT_BIN):
+    if os.path.isfile(JSON_COMPILATION_DATABASE):
+        compilation_database = json.load(open(JSON_COMPILATION_DATABASE))
+        source_list = []
+        for file_item in compilation_database:
+            if file_item["file"].startswith("/"):
+                source_list.append(file_item["file"])
+            else:
+                source_list.append(file_item["directory"] + "/" + file_item["file"])
+        source_paths = "";
+        for source_path in source_list:
+            source_paths = source_paths + " " + source_path
+        os.system(OCLINT_BIN + source_paths)
+    else:
+        print "Error: compile_commands.json not found at current location."
+else:
+    print "Error: OCLint executable file not found."

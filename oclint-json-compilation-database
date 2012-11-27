@@ -8,15 +8,25 @@ OCLINT_BIN = OCLINT_BIN_FOLDER + "/oclint-0.6"
 CURRENT_WORKING_DIRECTORY = os.getcwd()
 JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + "/compile_commands.json"
 
+def get_source_path(file_attr, dir_attr):
+    if file_attr.startswith("/"):
+        return file_attr
+    elif dir_attr[-1] == "/":
+        return dir_attr + file_attr
+    else:
+        return dir_attr + "/" + file_attr
+
+def source_exist_at(path):
+    return os.path.isfile(path)
+
 if os.path.isfile(OCLINT_BIN):
     if os.path.isfile(JSON_COMPILATION_DATABASE):
         compilation_database = json.load(open(JSON_COMPILATION_DATABASE))
         source_list = []
         for file_item in compilation_database:
-            if file_item["file"].startswith("/"):
-                source_list.append(file_item["file"])
-            else:
-                source_list.append(file_item["directory"] + "/" + file_item["file"])
+            file_path = get_source_path(file_item["file"], file_item["directory"])
+            if (source_exist_at(file_path)):
+                source_list.append(file_path)
         source_paths = "";
         for source_path in source_list:
             source_paths = source_paths + " " + source_path

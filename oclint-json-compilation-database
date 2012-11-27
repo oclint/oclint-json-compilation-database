@@ -2,11 +2,19 @@
 
 import os
 import json
+import argparse
+import re
 
 OCLINT_BIN_FOLDER = os.path.dirname(os.path.abspath(__file__))
 OCLINT_BIN = OCLINT_BIN_FOLDER + "/oclint-0.6"
 CURRENT_WORKING_DIRECTORY = os.getcwd()
 JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + "/compile_commands.json"
+
+arg_parser = argparse.ArgumentParser(description='OCLint for JSON Compilation Database (compile_commands.json)')
+arg_parser.add_argument('-i', '-include', '--include', action='append', dest='includes')
+arg_parser.add_argument('-e', '-exclude', '--exclude', action='append', dest='excludes')
+arg_parser.add_argument('oclint_args', nargs='*')
+args = arg_parser.parse_args()
 
 def get_source_path(file_attr, dir_attr):
     if file_attr.startswith("/"):
@@ -19,6 +27,20 @@ def get_source_path(file_attr, dir_attr):
 def source_exist_at(path):
     return os.path.isfile(path)
 
+def source_list_inclusion_filter(source_list, inclusion_filter):
+    filtered_list = []
+    for path in source_list:
+        if re.search(inclusion_filter, path):
+            filtered_list.append(path)
+    return filtered_list
+
+def source_list_exclusion_filter(source_list, exclusion_filter):
+    filtered_list = []
+    for path in source_list:
+        if not re.search(exclusion_filter, path):
+            filtered_list.append(path)
+    return filtered_list
+
 if os.path.isfile(OCLINT_BIN):
     if os.path.isfile(JSON_COMPILATION_DATABASE):
         compilation_database = json.load(open(JSON_COMPILATION_DATABASE))
@@ -27,10 +49,18 @@ if os.path.isfile(OCLINT_BIN):
             file_path = get_source_path(file_item["file"], file_item["directory"])
             if (source_exist_at(file_path)):
                 source_list.append(file_path)
-        source_paths = "";
-        for source_path in source_list:
-            source_paths = source_paths + " " + source_path
-        os.system(OCLINT_BIN + source_paths)
+        if args.includes:
+            for inclusion_filter in args.includes:
+                source_list = source_list_inclusion_filter(source_list, inclusion_filter)
+        if args.excludes:
+            for exclusion_filter in args.excludes:
+                source_list = source_list_exclusion_filter(source_list, exclusion_filter)
+        source_paths = ' '.join(source_list)
+        oclint_arguments = ''
+        if args.oclint_args:
+            oclint_arguments = ' '.join(args.oclint_args)
+        print OCLINT_BIN + ' ' + oclint_arguments + ' ' + source_paths
+        os.system(OCLINT_BIN + ' ' + oclint_arguments + ' ' + source_paths)
     else:
         print "Error: compile_commands.json not found at current location."
 else:

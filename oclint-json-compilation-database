@@ -11,10 +11,10 @@ CURRENT_WORKING_DIRECTORY = os.getcwd()
 JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + "/compile_commands.json"
 
 arg_parser = argparse.ArgumentParser(description='OCLint for JSON Compilation Database (compile_commands.json)')
-arg_parser.add_argument("-v", help="show OCLint command with arguments", action="store_true", dest="invocation")
-arg_parser.add_argument('-i', '-include', '--include', action='append', dest='includes')
-arg_parser.add_argument('-e', '-exclude', '--exclude', action='append', dest='excludes')
-arg_parser.add_argument('oclint_args', nargs='*')
+arg_parser.add_argument("-v", action="store_true", dest="invocation", help="show invocation command with arguments")
+arg_parser.add_argument('-i', '-include', '--include', action='append', dest='includes', help="extract files matching pattern")
+arg_parser.add_argument('-e', '-exclude', '--exclude', action='append', dest='excludes', help="remove files matching pattern")
+arg_parser.add_argument('oclint_args', nargs='*', help="arguments that are passed to OCLint invocation")
 args = arg_parser.parse_args()
 
 def get_source_path(file_attr, dir_attr):

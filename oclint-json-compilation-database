@@ -11,6 +11,7 @@ CURRENT_WORKING_DIRECTORY = os.getcwd()
 JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + "/compile_commands.json"
 
 arg_parser = argparse.ArgumentParser(description='OCLint for JSON Compilation Database (compile_commands.json)')
+arg_parser.add_argument("-v", help="show OCLint command with arguments", action="store_true", dest="invocation")
 arg_parser.add_argument('-i', '-include', '--include', action='append', dest='includes')
 arg_parser.add_argument('-e', '-exclude', '--exclude', action='append', dest='excludes')
 arg_parser.add_argument('oclint_args', nargs='*')
@@ -55,12 +56,14 @@ if os.path.isfile(OCLINT_BIN):
         if args.excludes:
             for exclusion_filter in args.excludes:
                 source_list = source_list_exclusion_filter(source_list, exclusion_filter)
-        source_paths = ' '.join(source_list)
+        source_paths = '"' + '" "'.join(source_list) + '"'
         oclint_arguments = ''
         if args.oclint_args:
             oclint_arguments = ' '.join(args.oclint_args)
-        print OCLINT_BIN + ' ' + oclint_arguments + ' ' + source_paths
-        os.system(OCLINT_BIN + ' ' + oclint_arguments + ' ' + source_paths)
+        oclint_invocation = OCLINT_BIN + ' ' + oclint_arguments + ' ' + source_paths
+        if args.invocation:
+            print oclint_invocation
+        os.system(oclint_invocation)
     else:
         print "Error: compile_commands.json not found at current location."
 else:

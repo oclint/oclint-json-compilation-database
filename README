@@ -1,0 +1,14 @@
+oclint-json-compilation-database
+-------------------------------------------------------------------------------
+
+compile_commands.json is a JSON format compilation database. It maintains a list
+of sources with their build options.
+
+OCLint can leverage the information from this file to facilitate the inspection
+process.
+
+oclint-json-compilation-database helps extract and filter information from
+compile_commands.json, and invoke OCLint under the hook for analysis.
+
+Visit http://docs.oclint.org/en/dev/usage/oclint-json-compilation-database.html
+for documentation about using oclint-json-compilation-database.

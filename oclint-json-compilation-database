@@ -6,7 +6,7 @@ import argparse
 import re
 
 OCLINT_BIN_FOLDER = os.path.dirname(os.path.abspath(__file__))
-OCLINT_BIN = OCLINT_BIN_FOLDER + "/oclint-0.6"
+OCLINT_BIN = OCLINT_BIN_FOLDER + "/oclint-0.7"
 CURRENT_WORKING_DIRECTORY = os.getcwd()
 JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + "/compile_commands.json"
 

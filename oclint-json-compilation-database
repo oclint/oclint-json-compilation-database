@@ -4,6 +4,8 @@ import os
 import json
 import argparse
 import re
+import subprocess
+import sys
 
 OCLINT_BIN_FOLDER = os.path.dirname(os.path.abspath(__file__))
 OCLINT_BIN = OCLINT_BIN_FOLDER + "/oclint-0.7"
@@ -63,7 +65,8 @@ if os.path.isfile(OCLINT_BIN):
         oclint_invocation = OCLINT_BIN + ' ' + oclint_arguments + ' ' + source_paths
         if args.invocation:
             print oclint_invocation
-        os.system(oclint_invocation)
+        exit_code = subprocess.call(oclint_invocation, shell=True)
+        sys.exit(exit_code)
     else:
         print "Error: compile_commands.json not found at current location."
 else:

@@ -52,7 +52,8 @@ if os.path.isfile(OCLINT_BIN):
         for file_item in compilation_database:
             file_path = get_source_path(file_item["file"], file_item["directory"])
             if (source_exist_at(file_path)):
-                source_list.append(file_path)
+                if not file_path in source_list:
+                    source_list.append(file_path)
         if args.includes:
             for inclusion_filter in args.includes:
                 source_list = source_list_inclusion_filter(source_list, inclusion_filter)

@@ -1,4 +1,6 @@
-oclint-json-compilation-database
+# oclint-json-compilation-database
+
+[![Travis CI Status](https://api.travis-ci.org/oclint/oclint-json-compilation-database.svg?branch=master)](https://travis-ci.org/oclint/oclint-json-compilation-database)
 -------------------------------------------------------------------------------
 
 compile_commands.json is a JSON format compilation database. It maintains a list

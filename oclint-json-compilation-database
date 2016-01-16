@@ -49,11 +49,11 @@ def source_list_exclusion_filter(source_list, exclusion_filter):
     return filtered_list
 
 if not source_exist_at(OCLINT_BIN):
-    print "Error: OCLint executable file not found."
+    print("Error: OCLint executable file not found.")
     sys.exit(99)
 
 if not source_exist_at(JSON_COMPILATION_DATABASE):
-    print "Error: compile_commands.json not found at current location."
+    print("Error: compile_commands.json not found at current location.")
     sys.exit(98)
 
 compilation_database = json.load(open(JSON_COMPILATION_DATABASE))
@@ -81,8 +81,8 @@ if args.debug:
     debug_argument = ' -debug'
 oclint_invocation = OCLINT_BIN + debug_argument + oclint_arguments + ' ' + source_paths
 if args.invocation:
-    print '------------------------------ OCLint ------------------------------'
-    print oclint_invocation
-    print '--------------------------------------------------------------------'
+    print('------------------------------ OCLint ------------------------------')
+    print(oclint_invocation)
+    print('--------------------------------------------------------------------')
 exit_code = subprocess.call(oclint_invocation, shell=True)
 sys.exit(exit_code)

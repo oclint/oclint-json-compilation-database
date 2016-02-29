@@ -79,7 +79,7 @@ if args.oclint_args:
 debug_argument = ''
 if args.debug:
     debug_argument = ' -debug'
-oclint_invocation = OCLINT_BIN + debug_argument + oclint_arguments + ' ' + source_paths
+oclint_invocation = '"' + OCLINT_BIN + '"' + debug_argument + oclint_arguments + ' ' + source_paths
 if args.invocation:
     print('------------------------------ OCLint ------------------------------')
     print(oclint_invocation)

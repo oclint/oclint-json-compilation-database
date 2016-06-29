@@ -16,6 +16,7 @@ CURRENT_WORKING_DIRECTORY = os.getcwd()
 JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + os.sep + "compile_commands.json"
 
 arg_parser = argparse.ArgumentParser(description='OCLint for JSON Compilation Database (compile_commands.json)')
+arg_parser.add_argument("-c", action="store", dest="command", help="specifies the json-compilation-database file")
 arg_parser.add_argument("-v", action="store_true", dest="invocation", help="show invocation command with arguments")
 arg_parser.add_argument('-debug', '--debug', action="store_true", dest="debug", help="invoke OCLint in debug mode")
 arg_parser.add_argument('-i', '-include', '--include', action='append', dest='includes', help="extract files matching pattern")
@@ -51,6 +52,9 @@ def source_list_exclusion_filter(source_list, exclusion_filter):
 if not source_exist_at(OCLINT_BIN):
     print("Error: OCLint executable file not found.")
     sys.exit(99)
+
+if args.command:
+    JSON_COMPILATION_DATABASE = args.command
 
 if not source_exist_at(JSON_COMPILATION_DATABASE):
     print("Error: compile_commands.json not found at current location.")

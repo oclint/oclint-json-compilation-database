@@ -72,17 +72,15 @@ if args.includes:
 if args.excludes:
     for exclusion_filter in args.excludes:
         source_list = source_list_exclusion_filter(source_list, exclusion_filter)
-source_paths = '"' + '" "'.join(source_list) + '"'
-oclint_arguments = ''
+oclint_arguments = [OCLINT_BIN]
 if args.oclint_args:
-    oclint_arguments = ' ' + ' '.join(args.oclint_args)
-debug_argument = ''
+    oclint_arguments += args.oclint_args
 if args.debug:
-    debug_argument = ' -debug'
-oclint_invocation = '"' + OCLINT_BIN + '"' + debug_argument + oclint_arguments + ' ' + source_paths
+    oclint_arguments.append('-debug')
+oclint_arguments += source_list
 if args.invocation:
     print('------------------------------ OCLint ------------------------------')
-    print(oclint_invocation)
+    print(subprocess.list2cmdline(oclint_arguments))
     print('--------------------------------------------------------------------')
-exit_code = subprocess.call(oclint_invocation, shell=True)
+exit_code = subprocess.call(oclint_arguments)
 sys.exit(exit_code)

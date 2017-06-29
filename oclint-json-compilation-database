@@ -12,14 +12,14 @@ OCLINT_BIN_FOLDER = os.path.dirname(os.path.abspath(__file__))
 OCLINT_BIN = OCLINT_BIN_FOLDER + os.sep + "oclint"
 if platform.system() == "Windows":
     OCLINT_BIN += ".exe"
-CURRENT_WORKING_DIRECTORY = os.getcwd()
-JSON_COMPILATION_DATABASE = CURRENT_WORKING_DIRECTORY + os.sep + "compile_commands.json"
 
 arg_parser = argparse.ArgumentParser(description='OCLint for JSON Compilation Database (compile_commands.json)')
 arg_parser.add_argument("-v", action="store_true", dest="invocation", help="show invocation command with arguments")
 arg_parser.add_argument('-debug', '--debug', action="store_true", dest="debug", help="invoke OCLint in debug mode")
 arg_parser.add_argument('-i', '-include', '--include', action='append', dest='includes', help="extract files matching pattern")
 arg_parser.add_argument('-e', '-exclude', '--exclude', action='append', dest='excludes', help="remove files matching pattern")
+arg_parser.add_argument('-p', action='store', metavar='build-path', dest='build_path', default=os.getcwd(),
+                        help="specify the directory containing compile_commands.json")
 arg_parser.add_argument('oclint_args', nargs='*', help="arguments that are passed to OCLint invocation")
 args = arg_parser.parse_args()
 
@@ -52,11 +52,12 @@ if not source_exist_at(OCLINT_BIN):
     print("Error: OCLint executable file not found.")
     sys.exit(99)
 
-if not source_exist_at(JSON_COMPILATION_DATABASE):
-    print("Error: compile_commands.json not found at current location.")
+json_compilation_database = os.path.join(args.build_path, 'compile_commands.json')
+if not source_exist_at(json_compilation_database):
+    print("Error: compile_commands.json not found at %s." % args.build_path)
     sys.exit(98)
 
-compilation_database = json.load(open(JSON_COMPILATION_DATABASE))
+compilation_database = json.load(open(json_compilation_database))
 source_list = []
 for file_item in compilation_database:
     file_path = file_item["file"]
@@ -72,7 +73,7 @@ if args.includes:
 if args.excludes:
     for exclusion_filter in args.excludes:
         source_list = source_list_exclusion_filter(source_list, exclusion_filter)
-oclint_arguments = [OCLINT_BIN]
+oclint_arguments = [OCLINT_BIN, '-p', args.build_path]
 if args.oclint_args:
     oclint_arguments += args.oclint_args
 if args.debug:

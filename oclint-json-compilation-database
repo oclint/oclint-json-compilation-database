@@ -32,6 +32,7 @@ def get_source_path(file_attr, dir_attr):
         return dir_attr + os.sep + file_attr
 
 def source_exist_at(path):
+    decodedPath = path.replace("\\ ", " ");
     return os.path.isfile(path)
 
 def source_list_inclusion_filter(source_list, inclusion_filter):

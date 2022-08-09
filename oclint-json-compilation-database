@@ -48,8 +48,18 @@ def source_list_exclusion_filter(source_list, exclusion_filter):
             filtered_list.append(path)
     return filtered_list
 
-if not source_exist_at(OCLINT_BIN):
-    print("Error: OCLint executable file not found.")
+
+def check_working_oclint(oclint_bin) -> bool:
+    try:
+        with open(os.devnull, 'w') as dev_null:
+            subprocess.check_call([oclint_bin, "--version"], stdout=dev_null)
+    except subprocess.CalledProcessError:
+        print("Error: OCLint executable was not found or it does not work.")
+        return False
+    return True
+
+
+if not check_working_oclint(OCLINT_BIN):
     sys.exit(99)
 
 json_compilation_database = os.path.join(args.build_path, 'compile_commands.json')

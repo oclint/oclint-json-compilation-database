@@ -63,12 +63,12 @@ for file_item in compilation_database:
     file_path = file_item["file"]
     if not platform.system() == "Windows":
         file_path = get_source_path(file_item["file"], file_item["directory"])
-    if source_exist_at(file_path) and not file_path in source_list:
+    if source_exist_at(file_path) and file_path not in source_list:
         source_list.append(file_path)
 if args.includes:
     matched_list = []
     for inclusion_filter in args.includes:
-        matched_list.extend( source_list_inclusion_filter(source_list, inclusion_filter) )
+        matched_list.extend(source_list_inclusion_filter(source_list, inclusion_filter))
     source_list = matched_list
 if args.excludes:
     for exclusion_filter in args.excludes:

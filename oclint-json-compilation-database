@@ -60,7 +60,11 @@ if not source_exist_at(json_compilation_database):
 compilation_database = json.load(open(json_compilation_database))
 source_list = []
 for file_item in compilation_database:
+    if file_item == None:
+        continue
     file_path = file_item["file"]
+    if file_path == None:
+        continue
     if not platform.system() == "Windows":
         file_path = get_source_path(file_item["file"], file_item["directory"])
     if source_exist_at(file_path) and not file_path in source_list:
